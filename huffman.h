@@ -3,7 +3,7 @@
 
 static const int ASCII_TABLE_SIZE = 256;
 
-//Node structure.
+//no.
 
 struct node {
 	struct node * left;
@@ -12,15 +12,14 @@ struct node {
 	int frequency;
 };
 
-//Frequency structure.
+//Estrutura de frequencia.
 
 struct frequencyData {
 	int * frequencyHash;
 	int totalCharacters;
-	int totalDistinctCharacters;
 };
 
-//Char list structure.
+
 
 struct characterList {
 	struct node * list;
@@ -63,9 +62,6 @@ void quickSortByFrequency(struct node * list, int left, int right) {
 	if (i < right) quickSortByFrequency(list, i, right);
 }
 
-/**
-* Verify if char is EOF or '\0', both ending point characters.
-*/
 
 struct node * buildNode() {
 	struct node * newNode = (struct node*) malloc(sizeof(struct node));
@@ -119,14 +115,15 @@ struct characterList * getCharacterList(struct frequencyData * data) {
 	return charList;
 }
 
-/**
-* Build a hash to store character frequency (integer) by the correspondant ascii code.
-*/
 
+
+//Verifica se é EOF
 int isContent(char c) {
 	return c != '\0' && c != EOF;
 }
-
+/**
+* Cria um hash para guardar a frequencia de um caracter na tabela ASCII.
+*/
 void createFrequencyStructure(struct frequencyData ** data) {
 	(*data) = (struct frequencyData *) malloc(sizeof(struct frequencyData));
 	(*data)->frequencyHash = (int *)calloc(ASCII_TABLE_SIZE, sizeof(int));
@@ -148,14 +145,11 @@ struct frequencyData * getFrequencyData(char * contents) {
 	return data;
 }
 
-/**
-*  Huffman compression procedure.
-*/
-
+//verifica se é folha
 int isLeafNode(struct node * treeNode) {
 	return treeNode->left == NULL && treeNode->right == NULL;
 }
-
+// adiciona um caracter a uma string
 char * append(char * sequence, char c) {
 	size_t len = strlen(sequence);
 
@@ -189,7 +183,7 @@ void inOrder(struct node * x, char * sequence, char ** map) {
 }
 
 /**
-* Codify Huffman's tree and return a map where key/value => character/codification.
+* Codifica a árvore de huffman e retorna o valor no mapa.
 */
 
 char ** codifyTree(struct node * root) {
@@ -233,12 +227,12 @@ char * translate(char * contents, char ** translation) {
 		i++;
 	}
 
-	//Update codification map with the total bits in our codified string.
-	//This will be useful when decompressing our file.
+	//Atualiza a codificaçao do mapa com o numero total de bits.
+	//será util para decodificar o arquivo.
 
 	translation[0] = newString(100);
 
-	//Stringify 'bitCont' and save it to the translation map.
+	//transforma bitCont em string e salva no mapa.
 
 	itoa(bitCont, translation[0], 10);
 
@@ -287,7 +281,7 @@ struct huffmanData * createHuffmanData(char ** codificationMap, char * compresse
 
 	struct huffmanData * huffmanData = (struct huffmanData*)malloc(sizeof(struct huffmanData));
 
-	//Codification map to string.
+	
 	char * c = newString(1);
 	char * map = newString(MARRETA);
 	map[0] = '\0';
@@ -328,7 +322,7 @@ void analyzeCompressionRate(float compressionRate) {
 	}
 }
 
-//Build huffman tree and return a pointer to the root.
+//Constroi a arovre de Huffman e retorna um ponteiro para a raiz.
 
 struct node * buildHuffmanTree(struct characterList * charList) {
 	int n;
@@ -361,7 +355,7 @@ struct huffmanData * compress(char * toCompress) {
 
 	struct node * treeRoot = buildHuffmanTree(charList);
 
-	//Returns codification map.
+	
 
 	char ** codificationMap = codifyTree(treeRoot);
 	
@@ -525,7 +519,7 @@ char * translateFromBinary(char * binaryContent, struct node * root) {
 		switch (c) {
 			case '0': {
 				if (root->right == NULL) {
-					printf("Erro ao descomprimir arquivo: c�digo n�o reconhecido.");
+					printf("Erro ao descomprimir arquivo: código não reconhecido.");
 					exit(1);
 				}
 				root = root->right;
@@ -534,7 +528,7 @@ char * translateFromBinary(char * binaryContent, struct node * root) {
 			}
 			case '1': {
 				if (root->left == NULL) {
-					printf("Erro ao descomprimir arquivo: c�digo n�o reconhecido.");
+					printf("Erro ao descomprimir arquivo: código não reconhecido.");
 					exit(1);
 				}
 				root = root->left;
