@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "fileutils.h"
 #include "huffman.h"
-
+#include <time.h>
 #define DECOMPRESS 1
 #define COMPRESS 2
 
@@ -36,11 +36,13 @@ struct huffmanData * parseHuffmanData(char * filePath) {
 int main(int argc, char *argv[]) {
 
 	struct options * options = createOptions();
-
+    //float inicio, total; usadas para medir o tempo
 	int numberOfArgs = argc - 1;
 
 	switch (numberOfArgs) {
 	case COMPRESS:
+		//inicio= clock();
+		
 		strcpy(options->originPath, argv[1]);
 		strcpy(options->targetPath, argv[2]);
 
@@ -57,9 +59,11 @@ int main(int argc, char *argv[]) {
 
 		strcpy(targetTreeFile, options->targetPath);
 		strcat(targetTreeFile, "_tree");
-
+        
 		printf("\n\nConteudo comprimido: \n\n%s\n\n", results->compressedContent);
-
+        //mede o tempo
+        //total= (clock()-inicio)/1000000;
+        //printf("%f",total);
 		writeToFile(options->targetPath, results->compressedContent);
 
 		//Salva a arovre de huffman para descompactar no futuro.
@@ -71,12 +75,18 @@ int main(int argc, char *argv[]) {
 		strcpy(options->originPath, argv[1]);
 
 		printf("Descompressao \n\n");
+        //inicio= clock();
+                
 		printf("Origem... %s\n", options->originPath);
 
 		char * decompressionResults = decompress(parseHuffmanData(options->originPath));
-
+ 
 		writeToFile(strcat(options->originPath, "_decompressed.txt"), decompressionResults);
-
+        //mede o tempo
+       // total= (clock()-inicio)/1000000;
+        //printf("%f",total);
+         
+		  
 		break;
 	default:
 		printf("Parametros invalidos...");
